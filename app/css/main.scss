@@ -1,0 +1,91 @@
+$backgroundColor: #8e44ad;
+$textColor: #ffffff;
+$primaryColor: #e67e22;
+$accentColor: #34495e;
+
+body {
+  background: $backgroundColor;
+  color: $textColor;
+  font-family: 'Raleway', sans-serif;
+
+  font-weight: 300;
+  font-size: 1em;
+
+
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#app {
+  padding: 25px;
+
+  #game {
+    margin: auto;
+    width: 670px;
+
+    #grid {
+      display: inline-block;
+      width: 450px;
+      margin-right: 20px;
+
+      .tile {
+        width: 150px;
+        border: none;
+        display: inline-block;
+        cursor: pointer;
+        vertical-align:top;
+      }
+    }
+
+    #aside {
+      vertical-align: top;
+      display: inline-block;
+      width: 200px;
+
+      #scoreboard {
+
+        .block {
+          background: transparent;
+          border: 1px solid white;
+          text-align: center;
+          margin-bottom: 15px;
+          border-radius: 0;
+          padding: 5px;
+
+          label {
+            display: block;
+            text-transform: uppercase;
+            color: $textColor;
+            font-weight: bold;
+            font-size: 1.2em;
+          }
+          span {
+            display: block;
+            color: $textColor;
+            font-weight: bold;
+            font-size: 1.5em;
+          }
+        }
+      }
+
+      #menu {
+        button {
+          display: block;
+          width: 100%;
+          background: $accentColor;
+          border: solid 1px;
+          padding: 20px;
+          text-align: center;
+          margin-bottom: 15px;
+        }
+        button[disabled] {
+          color: grey;
+        }
+      }
+    }
+  }
+}
+
