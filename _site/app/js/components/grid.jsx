@@ -8,11 +8,11 @@ var images = [
     '//media.giphy.com/media/XIqCQx02E1U9W/giphy.gif',
     'https://media.giphy.com/media/ZJqPtMjmHbNN6/giphy.gif',
     'https://media.giphy.com/media/l4Jz3a8jO92crUlWM/giphy.gif',
-    'https://media.giphy.com/media/d3mlE7uhX8KFgEmY/giphy.gif',
+    '//i.giphy.com/5ZdCsQHEoCUBq.gif',
     '//i.giphy.com/BeGJ3IXngxyeY.gif',
-    'https://media.giphy.com/media/3cB7aOM6347PW/giphy.gif',
+    '//i.giphy.com/LhenEkp5EsPJe.gif',
     '//i.giphy.com/3o6UB65bfF8P1anIZ2.gif',
-    'https://media.giphy.com/media/3o7abAHdYvZdBNnGZq/giphy.gif'
+    '//i.giphy.com/l0NwLUVdksjwmtgLC.gif'
 ];
 
 var Grid = React.createClass({

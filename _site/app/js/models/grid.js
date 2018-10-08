@@ -10,11 +10,7 @@ function Grid(tiles, emptyPosition, expected) {
     if (tiles.length != expected.length) {
         throw 'Invalid size';
     }
-
-    // Tamanho da grid
     this.size = Math.sqrt(tiles.length);
-    
-
     this.tiles = tiles;
     this.emptyPosition = emptyPosition;
     this.expected = expected;
@@ -25,28 +21,42 @@ function Grid(tiles, emptyPosition, expected) {
  */
 Grid.prototype.isSolvable = function() {
     function countInversions(array) {
-        var inversions = 1;
+        var invArray = array.map(function(num, i) {
+            var inversions = 0;
+            for (j = i + 1; j < array.length; j++) {
+                console.log(j, array[j], num);
 
-        for (var i = 0; i < array.length - 1; i++) {
-            for (var j = i+1; j < array.length -1; j++) {
-                if (array[i] > array[j]) inversions++;
+                if (array[j] && array[j] < num) {
+                    inversions += 1;
+                }
             }
-        }
-
-        return inversions;
+            return inversions;
+        });
+        return invArray.reduce(function(a, b) {
+            return a + b;
+        });
     }
 
-    console.log(this.tiles % 2 === 0);
-    return countInversions(this.tiles) % 2 == 0;
+    console.log(this.tiles);
+
+    if (countInversions(this.tiles) % 2 == 0) {
+        return true;
+    } else {
+        return false;
+    }
 };
 
 Grid.prototype.ensureSolvable = function() {
     function switchTiles(array) {
-        // trocar tiles para uma nova configuração
-
+        var i = 0;
+        while (!array[i] || !array[i+1]) i++;
+        var tile = array[i];
+        array[i] = array[i+1];
+        array[i+1] = tile;
+        return array;
     }
     if (!this.isSolvable()) {
-        // this.tiles = switchTiles(this.tiles);
+        this.tiles = switchTiles(this.tiles);
     }
 };
 
@@ -55,8 +65,6 @@ Grid.prototype.ensureSolvable = function() {
  * @returns {{x: number, y: number}}
  */
 Grid.prototype.getTileCoordinates = function(position) {
-    console.log(position % this.size);
-
     return {
         x: position % this.size,
         y: Math.floor(position / this.size)
@@ -92,7 +100,16 @@ Grid.prototype.manhattan = function(currentPosition, expectedPosition) {
  * @returns {*}
  */
 Grid.prototype.heuristic = function() {
-
+    var heuristic = 0;
+    for (var i in this.tiles) {
+        var tileContent = this.tiles[i];
+        if (tileContent == Grid.EMPTY_TILE_CONTENT) {
+            heuristic += this.manhattan(i, this.tiles.length - 1);
+        } else {
+            heuristic += this.manhattan(i, tileContent - 1);
+        }
+    }
+    return heuristic;
 };
 
 /**
@@ -143,11 +160,7 @@ Grid.prototype.swap = function(swapPosition) {
  * @returns {Set}
  */
 Grid.prototype.getAdjacentTiles = function(position) {
-    console.log(position);
-
     var coordinates = this.getTileCoordinates(position);
-
-    console.log(coordinates);
     var max = this.size - 1;
     var adjacentTiles = new Set();
     if (coordinates.x > 0) {
