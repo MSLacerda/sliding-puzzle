@@ -75,33 +75,53 @@ Grid.prototype.getTileCoordinates = function(position) {
  * @returns {Array}
  */
 Grid.prototype.getValidMoves = function() {
+    /**
+     * Retorna quais movimentos são possiveis de acordo
+     * com o estado do espaço em branco 
+     */
+
     var axis = this.getTileCoordinates(this.emptyPosition);
     var max = this.size - 1;
-    var valid = new Array();
+    var valid = [];
+
     if (axis.y > 0) valid.push(Grid.MOVE_UP);
     if (axis.x > 0) valid.push(Grid.MOVE_LEFT);
     if (axis.x < max) valid.push(Grid.MOVE_RIGHT);
     if (axis.y < max) valid.push(Grid.MOVE_DOWN);
+
     return valid;
 };
 
 /**
+ * 
  * @returns {number}
  */
-Grid.prototype.manhattan = function(currentPosition, expectedPosition) {
-    var currentPosition = this.getTileCoordinates(currentPosition);
-    var expectedPosition = this.getTileCoordinates(expectedPosition);
-    var x = Math.abs(currentPosition.x - expectedPosition.x);
-    var y = Math.abs(currentPosition.y - expectedPosition.y);
-    return x + y;
+Grid.prototype.manhattan = function(tileA, tileB) {
+
+    /**
+     * Calcula a distancia entre dois pontos de acordo
+     * com o algoritmo de distancia de manhattan
+     * 
+     * abs(x1-x2) + abs(y1 + y2);
+     * 
+     * Fonte: https://stackoverflow.com/questions/29781359/how-to-find-manhattan-distance-in-a-continuous-two-dimensional-matrix
+     */
+
+    var currentPosition = this.getTileCoordinates(tileA);
+    var expectedPosition = this.getTileCoordinates(tileB);
+
+    return Math.abs(currentPosition.x - expectedPosition.x) + Math.abs(currentPosition.y - expectedPosition.y);
 };
 
 /**
  * @returns {*}
  */
 Grid.prototype.heuristic = function() {
+    console.log('teste');
+
     var heuristic = 0;
     for (var i in this.tiles) {
+
         var tileContent = this.tiles[i];
         if (tileContent == Grid.EMPTY_TILE_CONTENT) {
             heuristic += this.manhattan(i, this.tiles.length - 1);

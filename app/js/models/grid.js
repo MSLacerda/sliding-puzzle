@@ -29,24 +29,39 @@ Grid.prototype.isSolvable = function() {
 
         for (var i = 0; i < array.length - 1; i++) {
             for (var j = i+1; j < array.length -1; j++) {
-                if (array[i] > array[j]) inversions++;
+                if (array[j] && array[i] > array[j]) inversions++;
             }
         }
 
         return inversions;
     }
 
-    console.log(this.tiles % 2 === 0);
     return countInversions(this.tiles) % 2 == 0;
 };
 
 Grid.prototype.ensureSolvable = function() {
-    function switchTiles(array) {
-        // trocar tiles para uma nova configuração
+    /**
+     * Garante que a configuração da grid atual seja solu-
+     * cionavel
+     */
 
+    function switchTiles(array) {
+        /**
+         * Faz uma inversão para garantir uma quantidade par
+         * de inversões
+         */
+
+        var i = 0;
+        while (!array[i] || !array[i+1]) i++;
+        var tile = array[i];
+        array[i] = array[i + 1];
+        array[i + 1] = tile;
+
+        return array.slice();
     }
+
     if (!this.isSolvable()) {
-        // this.tiles = switchTiles(this.tiles);
+        this.tiles = switchTiles(this.tiles);
     }
 };
 
@@ -55,7 +70,6 @@ Grid.prototype.ensureSolvable = function() {
  * @returns {{x: number, y: number}}
  */
 Grid.prototype.getTileCoordinates = function(position) {
-    console.log(position % this.size);
 
     return {
         x: position % this.size,
@@ -80,11 +94,22 @@ Grid.prototype.getValidMoves = function() {
 /**
  * @returns {number}
  */
-Grid.prototype.manhattan = function(currentPosition, expectedPosition) {
-    var currentPosition = this.getTileCoordinates(currentPosition);
+Grid.prototype.manhattan = function(tileA, tileB) {
+
+    /**
+     * Calcula a distancia entre dois pontos de acordo
+     * com o algoritmo de distancia de manhattan
+     * 
+     * abs(x1-x2) + abs(y1 + y2);
+     * 
+     * Fonte: https://stackoverflow.com/questions/29781359/how-to-find-manhattan-distance-in-a-continuous-two-dimensional-matrix
+     */
+
+    var currentPosition = this.getTileCoordinates(tileA);
     var expectedPosition = this.getTileCoordinates(expectedPosition);
     var x = Math.abs(currentPosition.x - expectedPosition.x);
     var y = Math.abs(currentPosition.y - expectedPosition.y);
+
     return x + y;
 };
 
@@ -92,7 +117,21 @@ Grid.prototype.manhattan = function(currentPosition, expectedPosition) {
  * @returns {*}
  */
 Grid.prototype.heuristic = function() {
+    /**
+     * Calcula a distancia entre uma peça e a sua posição
+     * final.
+     */
 
+    var heuristic = 0;
+    for (var i in this.tiles) {
+        var tileContent = this.tiles[i];
+        if (tileContent == Grid.EMPTY_TILE_CONTENT) {
+            heuristic += this.manhattan(i, this.tiles.length - 1);
+        } else {
+            heuristic += this.manhattan(i, tileContent - 1);
+        }
+    }
+    return heuristic;
 };
 
 /**
