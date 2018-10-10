@@ -46,12 +46,7 @@ var Game = React.createClass({
                 var game = this;
                 var delay = 100;
                 for (var i = 0; i < solution.length; i++) {
-                    (function(n) {
-                        timeouts.push(setTimeout(function() {
-                            game.move(solution[n]);
-                        }, delay));
-                    } (i));
-                    delay = delay + 100;
+                    console.log(solution[i]);
                 }
             }
         }

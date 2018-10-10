@@ -18,7 +18,7 @@ function State(grid, moves) {
 State.prototype.expand = function() {
 
     var states = [];
-    var validMoves = _.shuffle(this.grid.getValidMoves());
+    var validMoves = this.grid.getValidMoves();
 
     for (var i in validMoves) {
         var move = validMoves[i];
@@ -40,6 +40,8 @@ State.prototype.expand = function() {
  * @constructor
  */
 function Solver(grid) {
+    console.log(grid);
+
     this.queue = new PriorityQueue({
         comparator: function(a, b) { return a.cost - b.cost; },
         strategy: PriorityQueue.BinaryHeapStrategy
@@ -51,7 +53,9 @@ function Solver(grid) {
  * @returns {*}
  */
 Solver.prototype.solve = function() {
+    // Constantes
     var MAX = 200000;
+    // ------------
 
     var visitedSet = new Set();
     var iterations = 0;
@@ -61,6 +65,7 @@ Solver.prototype.solve = function() {
         /**
          * Configura quantas iterações são possíveis para encontrar a solução
          */
+
         iterations++;
         if (iterations >= MAX) return false;
 
@@ -69,15 +74,11 @@ Solver.prototype.solve = function() {
         if (gridState.grid.isSolved()) {
             return gridState.moves;
         } else {
-            
-            console.log(visitedSet);
-
             visitedSet.add(gridState);
             var newStates = gridState.expand(gridState);
 
             for (var i in newStates) {
                 var newState = newStates[i];
-    
                 if (!visitedSet.has(newState)) {
                     this.queue.queue(newState);
                 }

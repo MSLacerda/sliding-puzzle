@@ -25,15 +25,37 @@ function Grid(tiles, emptyPosition, expected) {
  */
 Grid.prototype.isSolvable = function() {
     function countInversions(array) {
-        var inversions = 1;
+        var arrayOfInversions = [];
+        
 
-        for (var i = 0; i < array.length - 1; i++) {
-            for (var j = i+1; j < array.length -1; j++) {
-                if (array[j] && array[i] > array[j]) inversions++;
+        /**
+         * Conta a quantidade de inversões em um determinado array
+         */
+
+        arrayOfInversions = array.map(function (index, value) {
+            var inversions = 1;
+
+            for (var j = index + 1; j < array.length - 1; j++ ) {
+                if (array[j] && array[j] < value) inversions++;
             }
-        }
 
-        return inversions;
+            return inversions;
+        })
+
+        return arrayOfInversions.reduce(function (acc, current) { return acc + current; });
+
+
+
+        // var inversions = 1;
+        
+
+        // for (var i = 0; i < array.length - 1; i++) {
+        //     for (var j = i+1; j < array.length - 1; j++) {
+        //         if (array[j] && array[i] > array[j]) inversions++;
+        //     }
+        // }
+
+        // return inversions;
     }
 
     return countInversions(this.tiles) % 2 == 0;
@@ -106,11 +128,9 @@ Grid.prototype.manhattan = function(tileA, tileB) {
      */
 
     var currentPosition = this.getTileCoordinates(tileA);
-    var expectedPosition = this.getTileCoordinates(expectedPosition);
-    var x = Math.abs(currentPosition.x - expectedPosition.x);
-    var y = Math.abs(currentPosition.y - expectedPosition.y);
+    var expectedPosition = this.getTileCoordinates(tileB);
 
-    return x + y;
+    return Math.abs(currentPosition.x - expectedPosition.x) + Math.abs(currentPosition.y - expectedPosition.y);
 };
 
 /**
@@ -135,7 +155,7 @@ Grid.prototype.heuristic = function() {
 };
 
 /**
- * Print a human-readable string representation
+ * Exibe os valores da grid
  */
 Grid.prototype.print = function() {
     var i = 0;
@@ -182,11 +202,7 @@ Grid.prototype.swap = function(swapPosition) {
  * @returns {Set}
  */
 Grid.prototype.getAdjacentTiles = function(position) {
-    console.log(position);
-
     var coordinates = this.getTileCoordinates(position);
-
-    console.log(coordinates);
     var max = this.size - 1;
     var adjacentTiles = new Set();
     if (coordinates.x > 0) {
